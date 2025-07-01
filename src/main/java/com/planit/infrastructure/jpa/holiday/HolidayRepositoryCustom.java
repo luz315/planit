@@ -40,7 +40,8 @@ public class HolidayRepositoryCustom {
 
         // 정렬
         List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
-        switch (request.sort()) {
+        String sort = request.sort() == null ? "" : request.sort();
+        switch (sort) {
             case "최신순" -> orderSpecifiers.add(holiday.date.desc());
             case "과거순" -> orderSpecifiers.add(holiday.date.asc());
             case "국가 내림차순" -> orderSpecifiers.add(holiday.countryCode.desc());
