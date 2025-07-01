@@ -51,6 +51,6 @@ class HolidaySyncSchedulerTest {
 
         // then
         verify(countryService).getCountryList();
-        verify(holidayService, atLeastOnce()).syncSingleCountryHoliday(anyString(), anyInt());
+        verify(holidayService, times(4)).syncSingleCountryHoliday(anyString(), anyInt());
     }
 }

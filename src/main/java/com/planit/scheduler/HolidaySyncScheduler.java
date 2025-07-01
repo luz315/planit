@@ -25,7 +25,8 @@ public class HolidaySyncScheduler {
 
     @Scheduled(cron = "0 0 1 2 1 *", zone = "Asia/Seoul")
     public void syncAllCountriesForCurrentYear() {
-        int year = LocalDate.now().getYear();
+        int current = LocalDate.now().getYear();
+        int previous = current - 1;
         List<String> countries = countryService.getCountryList().stream()
                 .map(Country::getCode)
                 .toList();
@@ -33,17 +34,19 @@ public class HolidaySyncScheduler {
         List<CompletableFuture<Void>> tasks = new ArrayList<>();
 
         for (String countryCode : countries) {
-            tasks.add(CompletableFuture.runAsync(() -> {
-                try {
-                    holidayService.syncSingleCountryHoliday(countryCode, year);
-                } catch (Exception e) {
-                    log.error("[{}-{}] 공휴일 동기화 실패", countryCode, year, e);
-                }
-            }, holidayExecutor));
+            for (int year : List.of(previous, current)) {
+                tasks.add(CompletableFuture.runAsync(() -> {
+                    try {
+                        holidayService.syncSingleCountryHoliday(countryCode, year);
+                    } catch (Exception e) {
+                        log.error("[{}-{}] 공휴일 동기화 실패", countryCode, year, e);
+                    }
+                }, holidayExecutor));
+            }
         }
 
         CompletableFuture.allOf(tasks.toArray(new CompletableFuture[0]))
-                .thenRun(() -> log.info("[{}] 전체 공휴일 동기화 완료", year))
+                .thenRun(() -> log.info("전체 공휴일 동기화 완료"))
                 .join();
     }
 
