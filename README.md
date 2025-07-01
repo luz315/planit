@@ -85,7 +85,9 @@
 
 * `HolidayErrorCode`, `CustomException`, `GlobalExceptionHandler`
 
-</br>
+<img width="1093" alt="image" src="https://github.com/user-attachments/assets/b1112404-e45d-41ee-9d6a-b82f6c2f4b12" />
+
+<br> <br>
 
 ## 5 커밋 로그 요약
 
